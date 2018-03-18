@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Implementation-Title: orders-management-api
+Implementation-Version: 0.0.1-SNAPSHOT
+Built-By: marcelluiz
+Implementation-Vendor-Id: com.skipthedishes
+Build-Jdk: 1.8.0_141
+Implementation-URL: http://maven.apache.org
+Created-By: Maven Integration for Eclipse
+
