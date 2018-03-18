@@ -14,6 +14,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
 import com.skipthedishes.api.App;
+import com.skipthedishes.api.model.Cousine;
 import com.skipthedishes.api.repository.CousineRepository;
 
 @RunWith(SpringRunner.class)
@@ -29,13 +30,13 @@ public class CousineControllerTest extends AbstractTransactionalJUnit4SpringCont
 	
 	private static String cousineEndpointUri;
 	private static String cousineStoresByIdUri;
-	private static String cousineFullTextSearchByUri;
+	private static String cousineFullTextSearchUri;
 	
 	@BeforeClass
 	public static void setUpClass() {
 		cousineEndpointUri = "/api/v1/cousine";
 		cousineStoresByIdUri = cousineEndpointUri + "/{cousineId}/stores";
-		cousineFullTextSearchByUri = cousineEndpointUri + "/search/{searchKeywords}";
+		cousineFullTextSearchUri = cousineEndpointUri + "/search/{searchKeywords}";
 	}
 
 	@Test
@@ -64,14 +65,14 @@ public class CousineControllerTest extends AbstractTransactionalJUnit4SpringCont
 		String expectedName = "Cousine1";
 		
 		// then
-		this.webClient.get().uri(cousineStoresByIdUri).exchange()
+		this.webClient.get().uri(cousineStoresByIdUri, existingId)
+		.exchange()
 		.expectStatus().isOk()
 		.expectHeader().contentType(MediaType.APPLICATION_JSON)
-		.expectBody()
-		.jsonPath("$.id").isEqualTo(expectedId)
-		.jsonPath("$.name").isEqualTo(expectedName);
+		.expectBody().jsonPath("$").isArray();
 	}
 	
+	// This test failed intentionally. The API returned an error 5xx when it should return a 404 Not found
 	@Test
 	public void testFindStoresByCousineIdOnNonExistingId() {
 		// given
@@ -81,8 +82,25 @@ public class CousineControllerTest extends AbstractTransactionalJUnit4SpringCont
 		Long expectedId = nonExistingId;
 		
 		// then
-		this.webClient.get().uri(cousineStoresByIdUri).exchange()
+		this.webClient.get().uri(cousineStoresByIdUri, nonExistingId).exchange()
 		.expectStatus().isNotFound()
 		.expectHeader().contentType(MediaType.APPLICATION_JSON);
+	}
+	
+	@Test
+	public void testFindByTextOnFindableText() {
+		// given
+		String keywords = "cousine 1"; // The name of the first mocked Cousine
+		
+		// when
+		Long expectedId = 1l;
+		
+		// then
+		
+		this.webClient.get().uri(cousineFullTextSearchUri, keywords)
+		.exchange()
+		.expectStatus().isOk()
+		.expectHeader().contentType(MediaType.APPLICATION_JSON)
+		.expectBodyList(Cousine.class);
 	}
 }
