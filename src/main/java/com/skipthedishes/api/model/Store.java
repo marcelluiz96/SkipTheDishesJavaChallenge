@@ -2,6 +2,7 @@ package com.skipthedishes.api.model;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -31,7 +32,7 @@ public class Store extends BaseEntity{
 	@NotBlank
 	private String address;
 
-	@OneToMany(mappedBy="store")
+	@OneToMany(mappedBy="store", cascade=CascadeType.PERSIST)
 	@JsonIgnore
 	private List<Product> products;
 	

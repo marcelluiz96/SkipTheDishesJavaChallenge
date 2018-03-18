@@ -9,5 +9,6 @@ import com.skipthedishes.api.model.Store;
 public interface StoreRepository extends JpaRepository<Store, Long> {
 	
 	List<Store> findByCousineId(Long cousineId);
-
+	
+	List<Store> findByProductsId(Long productId);
 }

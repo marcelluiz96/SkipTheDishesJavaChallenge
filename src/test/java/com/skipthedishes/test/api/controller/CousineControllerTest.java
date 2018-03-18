@@ -15,7 +15,6 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 
 import com.skipthedishes.api.App;
 import com.skipthedishes.api.repository.CousineRepository;
-import com.skipthedishes.test.helpers.database.DatabaseTestDataPopulator;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes= App.class,webEnvironment=WebEnvironment.RANDOM_PORT)
@@ -29,17 +28,20 @@ public class CousineControllerTest extends AbstractTransactionalJUnit4SpringCont
 	@Autowired CousineRepository cousineRepository;
 	
 	private static String cousineEndpointUri;
+	private static String cousineStoresByIdUri;
+	private static String cousineFullTextSearchByUri;
 	
 	@BeforeClass
 	public static void setUpClass() {
 		cousineEndpointUri = "/api/v1/cousine";
-		DatabaseTestDataPopulator.populateDatabase();
+		cousineStoresByIdUri = cousineEndpointUri + "/{cousineId}/stores";
+		cousineFullTextSearchByUri = cousineEndpointUri + "/search/{searchKeywords}";
 	}
 
 	@Test
 	public void testFindAllCousines() {
-		//given
-		// Nothing
+		// given/then
+		// As is
 		
 		
 		//then
@@ -50,5 +52,37 @@ public class CousineControllerTest extends AbstractTransactionalJUnit4SpringCont
 		.jsonPath("$").isArray();
 		
 		//TODO Improve this test case by veryfing the response data
+	}
+	
+	@Test
+	public void testFindStoresByCousineIdOnExistingId() {
+		//given
+		Long existingId = new Long(1);
+		
+		// when
+		Long expectedId = existingId;
+		String expectedName = "Cousine1";
+		
+		// then
+		this.webClient.get().uri(cousineStoresByIdUri).exchange()
+		.expectStatus().isOk()
+		.expectHeader().contentType(MediaType.APPLICATION_JSON)
+		.expectBody()
+		.jsonPath("$.id").isEqualTo(expectedId)
+		.jsonPath("$.name").isEqualTo(expectedName);
+	}
+	
+	@Test
+	public void testFindStoresByCousineIdOnNonExistingId() {
+		// given
+		Long nonExistingId = new Long(100);
+		
+		// when
+		Long expectedId = nonExistingId;
+		
+		// then
+		this.webClient.get().uri(cousineStoresByIdUri).exchange()
+		.expectStatus().isNotFound()
+		.expectHeader().contentType(MediaType.APPLICATION_JSON);
 	}
 }

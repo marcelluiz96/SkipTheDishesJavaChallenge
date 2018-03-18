@@ -4,7 +4,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 
+/**
+ * Contains functions related to Object Parsing and Object manipulation
+ * @author marcelluiz
+ *
+ */
 public class ObjectParser {
+	
 	/**
 	 * Converts a given Object to its String-JSON format using Jackson's writer
 	 * 

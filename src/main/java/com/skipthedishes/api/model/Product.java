@@ -1,5 +1,6 @@
 package com.skipthedishes.api.model;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -10,6 +11,8 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+
+import org.hibernate.annotations.Cascade;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
@@ -23,7 +26,7 @@ public class Product extends BaseEntity {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	@ManyToOne(targetEntity=Store.class)
+	@ManyToOne(targetEntity=Store.class, cascade=CascadeType.PERSIST)
 	@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="id")
 	@JsonIdentityReference(alwaysAsId=true)
 	private Store store;

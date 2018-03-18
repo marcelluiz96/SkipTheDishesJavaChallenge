@@ -17,7 +17,7 @@ import com.skipthedishes.api.model.OrderItem;
 import com.skipthedishes.api.repository.ProductOrderRepository;
 
 @Component
-@Path("/product")
+@Path("/order")
 public class ProductOrderController {
 
 	@Autowired

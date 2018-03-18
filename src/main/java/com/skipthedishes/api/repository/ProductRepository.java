@@ -10,4 +10,7 @@ import com.skipthedishes.api.model.Store;
 public interface ProductRepository extends JpaRepository<Product, Long>{
 	
 	List<Product> findByStoreId(Long storeId);
+	
+	// FullTextSearch is A MUST to replace this. ElasticSearch, Couchbase, or even the database's own feature
+	List<Product> findByNameIgnoreCaseContainingOrDescriptionIgnoreCaseContaining(String name, String description);
 }
